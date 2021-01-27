@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const metadataSchema = new Schema({
+const securitiesSchema = new Schema({
     nasdaqTraded: {
         trim: true,
         type: String,
@@ -62,6 +62,6 @@ const metadataSchema = new Schema({
   }
 );
 
-const Metadata = mongoose.model("Metadata", metadataSchema);
+const Securities = mongoose.model("Securities", securitiesSchema);
 
-module.exports = Metadata;
+module.exports = Securities;
