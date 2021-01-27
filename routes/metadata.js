@@ -22,11 +22,13 @@ router.get("/", auth.loginAuth, async (req, res) => {
 
 router.get("/:id", auth.loginAuth, async (req, res) => {
     try{
-        let data = await Sessions.find({metadataId: req.params.id});
-        if(data.length > 0){
+        let sessions = await Sessions.find({metadataId: req.params.id}).sort( { "date": -1 } );
+        let metadata = await Metadata.findById(req.params.id);
+        if(metadata.length > 0){
             res.json({
                 success: true,
-                data: data
+                data: sessions,
+                metadata: metadata
             });
         }else{
             let metadata = await Metadata.findById(req.params.id);
@@ -36,7 +38,6 @@ router.get("/:id", auth.loginAuth, async (req, res) => {
             else
                 jsonArray = await csv().fromFile("./data/etfs/"+metadata.symbol+".csv");
             let count = 0;
-            let sessions = [];
             console.log(jsonArray);
             jsonArray.forEach(async value => {
                 let session = new Sessions({
@@ -50,12 +51,13 @@ router.get("/:id", auth.loginAuth, async (req, res) => {
                     volume: value["Volume"]
                 });
                 const saveSession = await session.save();
-                sessions.push(saveSession);
                 count++;
                 if(count == jsonArray.length){
+                    let sessions = await Sessions.find({metadataId: req.params.id}).sort( { "date": -1 } );
                     res.json({
                         success: true,
-                        data: sessions
+                        data: sessions,
+                        equity: metadata
                     });
                 }
             });

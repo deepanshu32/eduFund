@@ -2,8 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Users = require("../models/users");
 const auth = require("../middleware/auth");
+const validator = require("../middleware/validator");
+const {
+    validationResult
+} = require('express-validator');
 
-router.post("/register", async (req, res) => {
+router.post("/register", validator.registerValidator, async (req, res) => {
   try{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -42,7 +46,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", validator.loginInValidator, async (req, res) => {
   try{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
