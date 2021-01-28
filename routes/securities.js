@@ -74,7 +74,6 @@ router.get("/:id", auth.loginAuth, async (req, res) => {
                 else
                     jsonArray = await csv().fromFile("./data/etfs/"+security.symbol+".csv");
                 let count = 0;
-                console.log(jsonArray);
                 jsonArray.forEach(async value => {
                     session = new Sessions({
                         metadataId: security._id,

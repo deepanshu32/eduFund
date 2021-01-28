@@ -22,7 +22,6 @@ router.post("/register", validator.registerValidator, async (req, res) => {
       password: req.body.password,
       mobile: req.body.mobile
     });
-    console.log(user);
     const saveUser = await user.save();
     const token = await saveUser.generateAuthToken();
     res.status(200).send({

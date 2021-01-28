@@ -9,11 +9,12 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const usersRouter = require('./routes/users');
 const securitiesRouter = require('./routes/securities');
 
-var app = express();
+const app = express();
+
+app.use(express.static(path.join(__dirname, '/build')));
 
 mongoose.connect("mongodb://localhost:27017/edufund", {
   useNewUrlParser: true,
@@ -32,9 +33,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/securities', securitiesRouter);
+
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/build/index.html'));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
